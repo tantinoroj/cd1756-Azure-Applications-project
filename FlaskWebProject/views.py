@@ -66,12 +66,6 @@ def post(id):
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-    session['flow'] = msal.ConfidentialClientApplication(
-        CLIENT_ID,
-        # authority=AUTHORITY,
-        client_credential=CLIENT_SECRET,
-    ).initiate_auth_code_flow(SCOPES, redirect_uri='udacitycms-hee2d4eyhgabgqa2.southeastasia-01.azurewebsites.net')
-    return redirect(session['flow']['auth_uri'])
     
     if current_user.is_authenticated:
         return redirect(url_for('home'))
