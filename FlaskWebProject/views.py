@@ -3,7 +3,7 @@ Routes and views for the flask application.
 """
 
 from datetime import datetime
-from flask import render_template, flash, redirect, request, session, url_for, Flask
+from flask import render_template, flash, redirect, request, session, url_for
 from werkzeug.urls import url_parse
 from config import Config
 from FlaskWebProject import app, db
@@ -12,12 +12,6 @@ from flask_login import current_user, login_user, logout_user, login_required
 from FlaskWebProject.models import User, Post
 import msal
 import uuid
-
-# app = Flask(__name__)
-# app.secret_key = 'ac2df92a-66cf-4f47-875b-f5d027c33934'
-
-def index():
-    return 'Welcome to the Flask Web App! <a href="/login">Login</a>'
 
 imageSourceUrl = 'https://'+ app.config['BLOB_ACCOUNT']  + '.blob.core.windows.net/' + app.config['BLOB_CONTAINER']  + '/'
 
@@ -66,10 +60,9 @@ def post(id):
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-    
-    # if current_user.is_authenticated:
-    #     return redirect(url_for('home'))
-    # form = LoginForm()
+    if current_user.is_authenticated:
+        return redirect(url_for('home'))
+    form = LoginForm()
     if form.validate_on_submit():
         user = User.query.filter_by(username=form.username.data).first()
         if user is None or not user.check_password(form.password.data):
