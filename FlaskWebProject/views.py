@@ -130,7 +130,7 @@ def _build_msal_app(cache=None, authority=None):
     return msal.ConfidentialClientApplication(
         client_id=CLIENT_ID,  # Your application (client) ID
         client_credential=CLIENT_SECRET,  # Your client secret
-        authority=authority or f"https://login.microsoftonline.com/{TENANT_ID}",  # Azure AD authority URL
+        authority=authority or f"https://login.microsoftonline.com/fd799da1-bfc1-4234-a91c-72b3a1cb9e26",  # Azure AD authority URL
         token_cache=cache  # Optional token cache
     )
 
