@@ -120,8 +120,19 @@ def _save_cache(cache):
     pass
 
 def _build_msal_app(cache=None, authority=None):
-    # TODO: Return a ConfidentialClientApplication
-    return None
+    """
+    Create and return a ConfidentialClientApplication instance.
+
+    :param cache: Optional. A cache to store tokens.
+    :param authority: Optional. The authority URL for Azure AD.
+    :return: An instance of ConfidentialClientApplication.
+    """
+    return msal.ConfidentialClientApplication(
+        client_id=CLIENT_ID,  # Your application (client) ID
+        client_credential=CLIENT_SECRET,  # Your client secret
+        authority=authority or f"https://login.microsoftonline.com/{TENANT_ID}",  # Azure AD authority URL
+        token_cache=cache  # Optional token cache
+    )
 
 def _build_auth_url(authority=None, scopes=None, state=None):
     # TODO: Return the full Auth Request URL with appropriate Redirect URI
