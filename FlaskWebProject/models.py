@@ -14,7 +14,7 @@ def id_generator(size=32, chars=string.ascii_uppercase + string.digits):
     return ''.join(random.choice(chars) for _ in range(size))
 
 class User(UserMixin, db.Model):
-    __tablename__ = 'users'
+    __tablename__ = 'USERS'
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(64), index=True, unique=True)
     password_hash = db.Column(db.String(128))
