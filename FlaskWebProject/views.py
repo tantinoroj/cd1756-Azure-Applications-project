@@ -83,34 +83,34 @@ def login():
 
 @app.route(Config.REDIRECT_PATH)  # Its absolute URL must match your app's redirect_uri set in AAD
 def authorized():
-    try:
-        cache = _load_cache()
-        result = _build_msal_app(cache=cache).acquire_token_by_auth_code_flow(
-            session.get("flow", {}), request.args)
-        if "error" in result:
-            return "Login failure: " + result["error_description"], 400
-        session["user"] = result.get("id_token_claims")
-        _save_cache(cache)
-    except ValueError:  # Usually caused by CSRF
-        pass  # Simply ignore them
-    return redirect(url_for("index"))
-    # if request.args.get('state') != session.get("state"):
-    #     return redirect(url_for("home"))  # No-OP. Goes back to Index page
-    # if "error" in request.args:  # Authentication/Authorization failure
-    #     return render_template("auth_error.html", result=request.args)
-    # if request.args.get('code'):
+    # try:
     #     cache = _load_cache()
-    #     # TODO: Acquire a token from a built msal app, along with the appropriate redirect URI
-    #     result = None
+    #     result = _build_msal_app(cache=cache).acquire_token_by_auth_code_flow(
+    #         session.get("flow", {}), request.args)
     #     if "error" in result:
-    #         return render_template("auth_error.html", result=result)
+    #         return "Login failure: " + result["error_description"], 400
     #     session["user"] = result.get("id_token_claims")
-    #     # Note: In a real app, we'd use the 'name' property from session["user"] below
-    #     # Here, we'll use the admin username for anyone who is authenticated by MS
-    #     user = User.query.filter_by(username="admin").first()
-    #     login_user(user)
     #     _save_cache(cache)
-    # return redirect(url_for('home'))
+    # except ValueError:  # Usually caused by CSRF
+    #     pass  # Simply ignore them
+    # return redirect(url_for("index"))
+    if request.args.get('state') != session.get("state"):
+        return redirect(url_for("home"))  # No-OP. Goes back to Index page
+    if "error" in request.args:  # Authentication/Authorization failure
+        return render_template("auth_error.html", result=request.args)
+    if request.args.get('code'):
+        cache = _load_cache()
+        # TODO: Acquire a token from a built msal app, along with the appropriate redirect URI
+        result = None
+        if "error" in result:
+            return render_template("auth_error.html", result=result)
+        session["user"] = result.get("id_token_claims")
+        # Note: In a real app, we'd use the 'name' property from session["user"] below
+        # Here, we'll use the admin username for anyone who is authenticated by MS
+        user = User.query.filter_by(username="admin").first()
+        login_user(user)
+        _save_cache(cache)
+    return redirect(url_for('home'))
 
 @app.route('/logout')
 def logout():
